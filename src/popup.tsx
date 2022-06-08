@@ -1,37 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Button, ChakraProvider } from "@chakra-ui/react"
+import { Button, ChakraProvider, Container, Input, ListItem, UnorderedList } from "@chakra-ui/react"
 
-const lottery = () => {
-  //
+const lottery = (items: string[]) => {
+  const num = items.length
+  return items[Math.floor(Math.random() * num)]
 }
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
-  const [currentURL, setCurrentURL] = useState<string>();
+  const [selected, setSelected] = useState('')
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      setCurrentURL(tabs[0].url);
-    });
     const hoge = chrome.storage.local.get()
-    console.log(hoge)
   }, []);
 
+  const onClickLottery = () => {
+    const dummy = ['A', 'B', 'C']
+    const result = lottery(dummy)
+    setSelected(result)
+  }
 
   return (
     <>
       <ChakraProvider>
-        <ul style={{ minWidth: "700px" }}>
-          <li>Current URL: {currentURL}</li>
-          <li>Current Time: {new Date().toLocaleTimeString()}</li>
-        </ul>
-        <Button
-          onClick={() => setCount(count + 1)}
-          style={{ marginRight: "5px" }}
-        >
-          count up
-        </Button>
+        <Container centerContent>
+          <Input placeholder="usage" />
+          <UnorderedList>
+            <ListItem>
+              Random Select: {selected}
+            </ListItem>
+          </UnorderedList>
+          <Button
+            onClick={() => onClickLottery()}
+            style={{ marginRight: "5px" }}
+          >
+            count up
+          </Button>
+        </Container>
       </ChakraProvider>
     </>
   );
