@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Button, ChakraProvider, Container, Input, ListItem, UnorderedList } from "@chakra-ui/react"
+import { Box, Button, ChakraProvider, Container, Input, List, ListItem, SimpleGrid, UnorderedList } from "@chakra-ui/react"
+import { AddForm } from "./components/AddForm";
+
+export type Names = {
+  key: string,
+  names: string[]
+}
 
 const lottery = (items: string[]) => {
   const num = items.length
@@ -9,9 +15,13 @@ const lottery = (items: string[]) => {
 
 const Popup = () => {
   const [selected, setSelected] = useState('')
+  const [namesObject, setNamesObject] = useState<{ [key: string]: Names }>({})
 
   useEffect(() => {
-    const hoge = chrome.storage.local.get()
+    chrome.storage.local.get().then((value) => {
+      setNamesObject(value)
+    })
+
   }, []);
 
   const onClickLottery = () => {
@@ -23,20 +33,28 @@ const Popup = () => {
   return (
     <>
       <ChakraProvider>
-        <Container centerContent>
-          <Input placeholder="usage" />
-          <UnorderedList>
-            <ListItem>
-              Random Select: {selected}
-            </ListItem>
-          </UnorderedList>
-          <Button
-            onClick={() => onClickLottery()}
-            style={{ marginRight: "5px" }}
-          >
-            count up
-          </Button>
-        </Container>
+        <Box w="540px">
+          <Container centerContent>
+            <AddForm />
+            <List>
+              {Object.keys(namesObject).map((key) => {
+                return (
+                  <ListItem>
+                    {key}:{namesObject[key].names}
+                  </ListItem>
+                );
+              })
+              }
+            </List>
+            Random Select: {selected}
+            <Button
+              onClick={() => onClickLottery()}
+              style={{ marginRight: "5px" }}
+            >
+              START!
+            </Button>
+          </Container>
+        </Box>
       </ChakraProvider>
     </>
   );
