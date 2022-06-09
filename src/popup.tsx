@@ -1,34 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Box, Button, ChakraProvider, Container, Input, List, ListItem, SimpleGrid, UnorderedList } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  ChakraProvider,
+  Container,
+  List,
+  ListItem,
+} from "@chakra-ui/react";
 import { AddForm } from "./components/AddForm";
 
 export type Names = {
-  key: string,
-  names: string[]
-}
+  key: string;
+  names: string[];
+};
 
 const lottery = (items: string[]) => {
-  const num = items.length
-  return items[Math.floor(Math.random() * num)]
-}
+  const num = items.length;
+  return items[Math.floor(Math.random() * num)];
+};
 
 const Popup = () => {
-  const [selected, setSelected] = useState('')
-  const [namesObject, setNamesObject] = useState<{ [key: string]: Names }>({})
+  const [selected, setSelected] = useState("");
+  const [namesObject, setNamesObject] = useState<{ [key: string]: Names }>({});
 
   useEffect(() => {
     chrome.storage.local.get().then((value) => {
-      setNamesObject(value)
-    })
-
+      setNamesObject(value);
+    });
   }, []);
 
   const onClickLottery = () => {
-    const dummy = ['A', 'B', 'C']
-    const result = lottery(dummy)
-    setSelected(result)
-  }
+    const dummy = ["A", "B", "C"];
+    const result = lottery(dummy);
+    setSelected(result);
+  };
 
   return (
     <>
@@ -43,8 +49,7 @@ const Popup = () => {
                     {key}:{namesObject[key].names}
                   </ListItem>
                 );
-              })
-              }
+              })}
             </List>
             Random Select: {selected}
             <Button
@@ -62,6 +67,8 @@ const Popup = () => {
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
-root.render(<React.StrictMode>
-  <Popup />
-</React.StrictMode>);
+root.render(
+  <React.StrictMode>
+    <Popup />
+  </React.StrictMode>
+);
